@@ -1,0 +1,99 @@
+<html>
+<head>
+    <title></title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var app = new Vue({
+                el: '#App',
+                data: {
+                    name: '',
+                    emailid: '',
+                    fullData: [],
+                    Editmode: true,
+                    updatemode: false,
+                    btnMode: "Submit",
+                    Validate: 0,
+                    Id: 1
+                },
+
+                methods: {
+                    btnSubmit: function () {
+                        this.fullData.push({
+                            Id: this.Id++
+                            , Name: this.name
+                            , emailid: this.emailid
+                        })
+                        if (this.btnMode == "Update") {
+                            this.btnMode = "Submit";
+                        }
+                        this.name = '';
+                        this.emailid = '';
+                         if (name == null || name == "" || emailid == null || emailid == "" ) {
+       alert("Please Fill All Required Field");
+       return false;
+     }
+                    },
+                    OnEdit: function (d) {
+                        let fitdata = (this.fullData).filter(function (val) { return val.Id == d });
+                        this.Id = fitdata[0].Id;
+                        this.name = fitdata[0].Name;
+                        this.emailid = fitdata[0].emailid;
+                        this.role = fitdata[0].role;
+                        this.btnMode = "Update";
+                        this.fullData = (this.fullData).filter(function (val) {
+                            return val.Id != d
+                        });
+                    },
+
+                    OnDelete: function (d) {
+                        this.fullData = (this.fullData).filter(function (val) {
+                            return val.Id != d
+                        });
+                    }
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <form id="form1">
+        <div id="App">
+            <h1>TODO Task</h1>
+            <table class="table table-bordered">
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                </tr>
+                <tr v-for="item in fullData">
+                    <td>{{item.Id}}</td>
+                    <td>{{item.Name}}</td>
+                    <td>{{item.emailid}}</td>
+                    <td>
+                        <div v-if="Editmode">
+                            <a v-on:click="OnEdit(item.Id)" href="#">Edit</a>
+                            <a v-on:click="OnDelete(item.Id)" href="#">Delete</a>
+                        </div>
+                        <div v-if="updatemode"><a href="#">update</a> <a href="#">Cancel</a> </div>
+                    </td>
+                </tr>
+            </table>
+            <br />
+            <div class="div_Master">
+                <input class="form-control" type="text" disabled placeholder="Id" v-model="Id">
+                <input class="form-control" type="text" placeholder="Enter Your Name" v-model="name" required>
+                <br>
+                <input class="form-control" type="email" placeholder="Enter Your Email" v-model="emailid" required>
+                <br>
+            
+                <br>
+            </div>
+            <button type="button" class="btn btn-circle-bottom" v-on:click="btnSubmit()">{{btnMode}} </button>
+        </div>
+    </form>
+</body>
+</html>
